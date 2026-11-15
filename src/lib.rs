@@ -7,19 +7,26 @@ use tauri::{Builder, Listener, Manager, WindowEvent};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    Builder::default()
-        .manage(Arc::new(Mutex::new(rpc::Client::new())))
+    let mut builder = Builder::default();
+
+    #[cfg(desktop)]
+    {
+        builder = builder.plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
+            let _ = app.get_webview_window("main").unwrap().set_focus();
+        }));
+    }
+
+    builder.manage(Arc::new(Mutex::new(rpc::Client::new())))
         .setup(|app| {
             #[cfg(debug_assertions)]
             {
-                let window = app.get_webview_window("main").unwrap();
-                window.open_devtools();
+                app.get_webview_window("main").unwrap().open_devtools();
             }
 
             let app_handle = app.handle().clone();
 
             app_handle.clone().listen("update_activity", move |event| {
-                let song = serde_json::from_str(event.payload()).unwrap();
+                let song = serde_json::from_str(event.payload()).unwrap_or_default();
                 println!("{:?}", song);
                 app_handle
                     .state::<Arc<Mutex<rpc::Client>>>()

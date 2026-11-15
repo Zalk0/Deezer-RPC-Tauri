@@ -45,13 +45,14 @@ impl Client {
             // Choose what is displayed in members list on Discord (default to artist like Spotify)
             .status_display_type(StatusDisplayType::State)
             // Artist
-            .state(
-                info.artists
+            .state(match info.artists {
+                Some(artists) => artists
                     .iter()
                     .map(|a| a.name.as_str())
                     .collect::<Vec<_>>()
                     .join(", "),
-            )
+                None => info.primary_artist,
+            })
             .state_url(format!("https://www.deezer.com/artist/{}", info.artist_id))
             // Song
             .details(info.track)

@@ -6,14 +6,16 @@ pub struct Artist {
     pub name: String,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Default)]
 pub struct CurrentSong {
     #[serde(rename = "SNG_TITLE")]
     pub track: String,
     #[serde(rename = "SNG_ID")]
     pub track_id: String,
     #[serde(rename = "ARTISTS")]
-    pub artists: Vec<Artist>,
+    pub artists: Option<Vec<Artist>>,
+    #[serde(rename = "ART_NAME")]
+    pub primary_artist: String,
     #[serde(rename = "ART_ID")]
     pub artist_id: String,
     #[serde(rename = "ALB_TITLE")]
