@@ -1,0 +1,21 @@
+name: Rust build
+on:
+  push:
+    branches: 
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v7
+      with:
+        persist-credentials: false
+    - name: Build
+      uses: tauri-apps/tauri-action@v1
+      with:
+        uploadWorkflowArtifacts: true
