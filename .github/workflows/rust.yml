@@ -13,9 +13,12 @@ jobs:
       fail-fast: false
       matrix:
         platforms:
+          - macos-latest-large
           - macos-latest
-          - ubuntu-latest
+          - ubuntu-26.04
+          - ubuntu-26.04-arm
           - windows-latest
+          - windows-11-arm
 
     runs-on: ${{ matrix.platforms }}
     steps:
@@ -25,7 +28,7 @@ jobs:
           persist-credentials: false
 
       - name: Install Linux dependencies
-        if: matrix.platforms == 'ubuntu-latest'
+        if: startsWith(matrix.platforms, 'ubuntu')
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev
