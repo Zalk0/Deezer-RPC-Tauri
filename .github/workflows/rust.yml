@@ -1,7 +1,7 @@
 name: Rust build
 on:
   push:
-    branches: 
+    branches:
       - main
 
 permissions:
@@ -9,13 +9,20 @@ permissions:
 
 jobs:
   build:
-    runs-on: windows-latest
+    strategy:
+      matrix:
+        runners:
+          - macos-latest
+          - ubuntu-latest
+          - windows-latest
+    runs-on: ${{ matrix.runners }}
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v7
-      with:
-        persist-credentials: false
-    - name: Build
-      uses: tauri-apps/tauri-action@v1
-      with:
-        uploadWorkflowArtifacts: true
+      - name: Checkout code
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Build and upload artifacts
+        uses: tauri-apps/tauri-action@v1
+        with:
+          uploadWorkflowArtifacts: true
