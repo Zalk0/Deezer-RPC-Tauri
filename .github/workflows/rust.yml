@@ -13,8 +13,8 @@ jobs:
       fail-fast: false
       matrix:
         platforms:
-          - macos-latest-large
-          - macos-latest
+          - macos-26-intel
+          - macos-26
           - ubuntu-26.04
           - ubuntu-26.04-arm
           - windows-latest
