@@ -10,17 +10,25 @@ permissions:
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
-        runners:
+        platforms:
           - macos-latest
           - ubuntu-latest
           - windows-latest
-    runs-on: ${{ matrix.runners }}
+
+    runs-on: ${{ matrix.platforms }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
         with:
           persist-credentials: false
+
+      - name: Install Linux dependencies
+        if: matrix.platforms == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev
 
       - name: Build and upload artifacts
         uses: tauri-apps/tauri-action@v1
